@@ -37,10 +37,30 @@
             <version>1.6.2</version>
         </dependency>
 
-         <!-- Mysql驱动包 -->
+         <!-- Mysql驱动包
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+-->
+        <!-- 手动安装本地驱动 -->
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>Dm8JdbcDriver18</artifactId>
+            <version>8.1.1.49</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>DmDialect-for-hibernate5.3</artifactId>
+            <version>8.1.1.49</version>
+        </dependency>
+        <dependency>
+            <groupId>dm.jdbc</groupId>
+            <artifactId>DmJdbcDriver</artifactId>
+            <version>18</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/DmJdbcDriver11.jar</systemPath>
         </dependency>
 
         <!-- 核心模块-->
