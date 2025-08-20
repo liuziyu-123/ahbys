@@ -18,6 +18,11 @@ import java.time.LocalDateTime;
 public class SysCompanyServiceImpl extends ServiceImpl<SysCompanyMapper, SysCompany>
         implements SysCompanyService {
 
+    /**
+     * 新增企业信息
+     * @param company 企业信息对象
+     * @return 操作结果
+     */
     @Override
     public AjaxResult addCompany(SysCompany company) {
         // 1. 数据校验
