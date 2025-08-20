@@ -45,7 +45,7 @@ public class SysProfileController extends BaseController
     private TokenService tokenService;
 
     private static final String SECRET_KEY = "1234567890"; // 安全密钥，应与拦截器一致
-    private static final long EXPIRATION_TIME = 60 * 1000; // 1分钟过期时间
+    private static final long EXPIRATION_TIME = 5 * 1000; // 1分钟过期时间
 
     /**
      * 个人信息

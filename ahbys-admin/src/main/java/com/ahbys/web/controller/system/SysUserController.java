@@ -3,6 +3,11 @@ package com.ahbys.web.controller.system;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import com.ahbys.common.constant.CacheConstants;
+import com.ahbys.common.core.domain.entity.ResetPasswordDTO;
+import com.ahbys.common.core.redis.RedisCache;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,6 +58,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private ISysPostService postService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 获取用户列表
@@ -253,4 +261,53 @@ public class SysUserController extends BaseController
     {
         return success(deptService.selectDeptTreeList(dept));
     }
+
+
+    /**
+     * 登录首页的忘记密码功能
+     *
+     */
+    @PostMapping("/reset")
+    public AjaxResult forgetPassWord(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO){
+        // 验证验证码
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(resetPasswordDTO.getCode(), "");
+        String captcha = redisCache.getCacheObject(verifyKey);
+
+        if (captcha == null) {
+            return AjaxResult.error("验证码已过期，请重新获取");
+        }
+
+        if (!captcha.equals(resetPasswordDTO.getCode())) {
+            return AjaxResult.error("验证码不正确");
+        }
+
+        // 验证用户
+        SysUser user = userService.selectUserByUserName(resetPasswordDTO.getUsername());
+        if (user == null) {
+            return AjaxResult.error("用户不存在");
+        }
+
+        // 验证手机号匹配
+        if (!resetPasswordDTO.getPhone().equals(user.getPhonenumber())) {
+            return AjaxResult.error("手机号与用户信息不匹配");
+        }
+
+        // 密码加密
+        String encryptedPassword = SecurityUtils.encryptPassword(resetPasswordDTO.getPassword());
+        user.setPassword(encryptedPassword);
+
+        // 更新密码
+        int updateSuccess = userService.updateUser(user);
+        if (updateSuccess==0) {
+            return AjaxResult.error("密码重置失败");
+        }
+
+        // 清除验证码
+        redisCache.deleteObject(verifyKey);
+
+        return AjaxResult.success("密码重置成功，请使用新密码登录");
+    }
+
+
+
 }

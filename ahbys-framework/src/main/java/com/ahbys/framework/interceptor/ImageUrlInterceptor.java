@@ -16,7 +16,6 @@ import java.util.Map;
 public class ImageUrlInterceptor implements HandlerInterceptor {
 
     private static final String SECRET_KEY = "1234567890"; // 安全密钥，应存储在安全位置
-    private static final long EXPIRATION_TIME = 60 * 1000; // 1分钟过期时间
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

@@ -23,7 +23,7 @@ public abstract class RepeatSubmitInterceptor implements HandlerInterceptor
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
 
-        System.out.println(request.getHeader("host"));
+        System.out.println("host======="+request.getHeader("host"));
         if (handler instanceof HandlerMethod)
         {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
